@@ -17,7 +17,6 @@ namespace MyGame.Code
               -target.Position.X - (target.Rectangle.Width / 2),
               -target.Position.Y - (target.Rectangle.Height / 2),
               0);
-
             var offset = Matrix.CreateTranslation(
                 GameView.ScreenWidth / 2,
                 GameView.ScreenHeight / 2,

@@ -14,8 +14,8 @@ namespace MyGame.Code
     {
         public readonly List<string> Cells;
         public readonly MiniMap MiniMap;
-        private readonly int KeyCount;
-        private readonly int SpotCount;
+        public readonly int KeyCount;
+        public readonly int SpotCount;
 
         public Map(List<string> cells, MiniMap miniMap, int keyCount, int spotCount)
         {
@@ -31,9 +31,10 @@ namespace MyGame.Code
         public List<(Rectangle, Texture2D)> Visited = new();
         public List<Rectangle> Keys = new();
         private static readonly Random rnd = new();
+        public bool IsLevelStarted = false;
 
         public static readonly int tileSize = 200;
-        private static List<Texture2D> Textures => GameView._textures;
+        private static List<Texture2D> Textures => GameView.textures;
 
 
         private int Capacity => 36;
@@ -62,6 +63,7 @@ namespace MyGame.Code
                     continue;
                 spots.Add(r);
             }
+            IsLevelStarted = true;
             return spots;
         }
 

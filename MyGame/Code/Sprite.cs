@@ -45,7 +45,7 @@ namespace MyGame.Code
 
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             
             spriteBatch.Draw(Texture, Rectangle, null, Color.White, 0f, new Vector2(),

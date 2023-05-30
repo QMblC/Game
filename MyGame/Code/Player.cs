@@ -26,6 +26,11 @@ namespace MyGame.Code
         public override int Speed { get; set; } = 7;
         public bool IsAlive = true;
 
+        private float AnimationElapsed;
+        private readonly float AnimationDelay = 100f;
+        private bool IsNeedToFlip = false;
+        private int Frame = 0;
+
         public Player(Texture2D texture) : base(texture)
         {
 
@@ -38,21 +43,50 @@ namespace MyGame.Code
 
         public void Update(List<Sprite> sprites, Map map, GameTime gameTime)
         {
-            if (Keyboard.GetState().GetPressedKeys().Contains(Keys.LeftAlt))
-                Speed = 4;
-            else
-                Speed = 7;
             Move();
+
+            if (Velocity.X < 0)
+                IsNeedToFlip = true;
+            else if (Velocity.X > 0)
+                IsNeedToFlip = false;
 
 
             if (Keyboard.GetState().GetPressedKeys().Contains(Keys.E))
                 CollectKey(map);
             CheckCollision(sprites);
 
+            if (Velocity == Vector2.Zero)
+                Frame = 4;
+            else
+            {
+                CreateAnimation(gameTime);
+            }
+
             CorrectDiagonalSpeed();
 
             Position += Velocity;
             Velocity = new Vector2();
+        }
+
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            if (!IsNeedToFlip)
+                spriteBatch.Draw(GameView.animation[Frame], Rectangle, null, Color.White, 0f, new Vector2(),
+                    SpriteEffects.None, 1);
+            else
+                spriteBatch.Draw(GameView.animation[Frame], Rectangle, null, Color.White, 0f, new Vector2(),
+                    SpriteEffects.FlipHorizontally, 1);
+        }
+
+        private void CreateAnimation(GameTime gameTime)
+        {
+            var animationDelay = AnimationDelay / (Speed * 0.5) + 50;
+            AnimationElapsed += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (AnimationElapsed >= animationDelay)
+            {
+                Frame = (Frame + 1) % 9;
+                AnimationElapsed = 0;
+            }
         }
 
         private void CheckCollision(List<Sprite> sprites)
@@ -93,8 +127,8 @@ namespace MyGame.Code
                         if (element == map.Visited[i].Item1)
                         {
                             map.Visited.RemoveAt(i);
-                            if(!map.Visited.Contains((key, GameView._textures[1])))
-                                map.Visited.Add((key, GameView._textures[1]));
+                            if(!map.Visited.Contains((key, GameView.textures[1])))
+                                map.Visited.Add((key, GameView.textures[1]));
                             break;
                         }
                             

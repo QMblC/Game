@@ -25,6 +25,11 @@ namespace MyGame.Code
             get { return new Rectangle((int)Position.X, (int)Position.Y, Texture.Width, Texture.Height); }
         }
 
+        public Rectangle Vision
+        {
+            get { return new Rectangle((int)Position.X - 40, (int)Position.Y - 40, Texture.Width + 80, Texture.Height + 80); }
+        }
+
         public void Update(List<Sprite> sprites, Map map, Player player)
         {
             var contrX = 0;
@@ -60,9 +65,9 @@ namespace MyGame.Code
                 }
             }
             if (Velocity.X > 0)
-                Texture = GameView._textures[11];
+                Texture = GameView.textures[11];
             if (Velocity.X < 0)
-                Texture = GameView._textures[10];
+                Texture = GameView.textures[10];
             Position += (Velocity + new Vector2(contrX, contrY));
             Velocity = new Vector2();
         }

@@ -18,7 +18,8 @@ namespace MyGame
         private List<Sprite> sprites = new();
         private MiniMap miniMap;
 
-        public static List<Texture2D> _textures;
+        public static List<Texture2D> textures;
+        public static List<Texture2D> animation;
 
         public static readonly int ScreenWidth = 1280;
         public static readonly int ScreenHeight = 720;
@@ -36,7 +37,7 @@ namespace MyGame
         protected override void Initialize()
         {
 
-            _textures = new List<Texture2D>
+            textures = new List<Texture2D>
             {
                 Content.Load<Texture2D>("Screenshot_11"),//0
                 Content.Load<Texture2D>("floor_1"),//1
@@ -51,7 +52,19 @@ namespace MyGame
                 Content.Load<Texture2D>("ghost"),
                 Content.Load<Texture2D>("ghostR")
             };
+            animation = new()
+            {
+                Content.Load<Texture2D>("Man1"),
+                Content.Load<Texture2D>("Man2"),
+                Content.Load<Texture2D>("Man3"),
+                Content.Load<Texture2D>("Man4"),
+                Content.Load<Texture2D>("Man5"),
+                Content.Load<Texture2D>("Man6"),
+                Content.Load<Texture2D>("Man7"),
+                Content.Load<Texture2D>("Man8"),
+                Content.Load<Texture2D>("Man9")
 
+            };
             
 
 
@@ -70,18 +83,18 @@ namespace MyGame
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            miniMap = new MiniMap(_textures[4], new Vector2(-300, -300));
+            miniMap = new MiniMap(textures[4], new Vector2(-300, -300));
             map = new Map(Levels.FirstLevel.Cells, miniMap, Levels.FirstLevel.KeyCount, Levels.FirstLevel.SpotCount);
 
-            player = new Player(_textures[2]);
+            player = new Player(animation[5]);
             player.Position = Levels.FirstLevel.StartPos;
-            player.Inventory = new Inventory(_textures[8], Levels.FirstLevel.KeyCount);
+            player.Inventory = new Inventory(textures[8], Levels.FirstLevel.KeyCount);
 
             camera = new Camera();
 
 
             sprites.Add(player);
-            map.CreateSpites(_textures);
+            map.CreateSpites(textures);
             sprites.AddRange(map.Sprites);
 
             
@@ -91,26 +104,30 @@ namespace MyGame
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            
+
+            if (!map.IsLevelStarted && map.Keys.Count != map.KeyCount)
+                return;
+
             camera.Follow(player);
             map.MiniMap.Update(player);
 
             player.Update(sprites, map, gameTime);
+
             player.Inventory.Update(map.MiniMap);
             foreach (var mob in map.Mobs)
                 mob.Update(sprites, map, player);
 
             if (!player.IsAlive)
             {
-                miniMap = new MiniMap(_textures[4], new Vector2(-300, -300));
+                miniMap = new MiniMap(textures[4], new Vector2(-300, -300));
                 map = new Map(Levels.FirstLevel.Cells, miniMap, Levels.FirstLevel.KeyCount, Levels.FirstLevel.SpotCount);
-                player = new Player(_textures[2]);
+                player = new Player(animation[5]);
                 player.Position = Levels.FirstLevel.StartPos;
-                player.Inventory = new Inventory(_textures[8], Levels.FirstLevel.KeyCount);
+                player.Inventory = new Inventory(textures[8], Levels.FirstLevel.KeyCount);
 
                 sprites = new();
                 sprites.Add(player);
-                map.CreateSpites(_textures);
+                map.CreateSpites(textures);
                 sprites.AddRange(map.Sprites);
             }
 
@@ -119,15 +136,15 @@ namespace MyGame
                 if (ActiveLevel == LevelId.FirstLevel)
                 {
                     ActiveLevel = LevelId.SecondLevel;
-                    miniMap = new MiniMap(_textures[4], new Vector2(-300, -300));
+                    miniMap = new MiniMap(textures[4], new Vector2(-300, -300));
                     map = new Map(Levels.SecondLevel.Cells, miniMap, Levels.SecondLevel.KeyCount, Levels.SecondLevel.SpotCount);
-                    player = new Player(_textures[2]);
+                    player = new Player(animation[0]);
                     player.Position = Levels.SecondLevel.StartPos;
-                    player.Inventory = new Inventory(_textures[8], Levels.SecondLevel.KeyCount);
+                    player.Inventory = new Inventory(textures[8], Levels.SecondLevel.KeyCount);
 
                     sprites = new();
                     sprites.Add(player);
-                    map.CreateSpites(_textures);
+                    map.CreateSpites(textures);
                     sprites.AddRange(map.Sprites);
                 }
             }
@@ -140,7 +157,10 @@ namespace MyGame
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            
+
+            if (!map.IsLevelStarted && map.Keys.Count != map.KeyCount)
+                return;
+
             _spriteBatch.Begin(SpriteSortMode.FrontToBack, transformMatrix: camera.Transform);
 
 
@@ -149,7 +169,7 @@ namespace MyGame
 
             foreach (var mob in map.Mobs)
             {
-                if(Map.GetPlayersVision(player).Intersects(mob.Rectangle))
+                if(Map.GetPlayersVision(player).Intersects(mob.Vision))
                     mob.Draw(gameTime, _spriteBatch);  
             }
                 

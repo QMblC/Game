@@ -21,16 +21,16 @@ namespace MyGame.Code
         {
             Background = background;
             for (var i = 0; i < keyCount; i++)
-                Keys.Add(GameView._textures[9]);
+                Keys.Add(GameView.textures[9]);
         }
 
         public void ChangeKeyInInventory()
         {
             for(var i = 0; i < Keys.Count; i++)
             {
-                if (Keys[i] == GameView._textures[9])
+                if (Keys[i] == GameView.textures[9])
                 {
-                    Keys[i] = GameView._textures[6];
+                    Keys[i] = GameView.textures[6];
                     break;
                 }           
             }
@@ -38,7 +38,7 @@ namespace MyGame.Code
 
         public void Update(MiniMap miniMap)
         {
-            Position = miniMap.Position + new Vector2(1280 - 200, -465);
+            Position = miniMap.Position + new Vector2(1280 - 190, -465);
         }
 
         public void Draw(SpriteBatch spriteBatch)

@@ -66,7 +66,41 @@ namespace MyGame.Code
                 "########################"
             };
             public static readonly Vector2 StartPos = new(1200, 1200);
-            public static readonly int KeyCount = 9;
+            public static readonly int KeyCount = 5;
+            public static readonly int SpotCount = 9;
+        }
+
+        public static class ThirdLevel
+        {
+            public static readonly List<string> Cells = new()
+            {
+                "########################",
+                "#                      #",
+                "#                      #",
+                "#                      #",
+                "#                      #",
+                "#                      #",
+                "#                      #",
+                "#                      #",
+                "#                      #",
+                "#                      #",
+                "#                      #",
+                "#                      #",
+                "#                      #",
+                "#                      #",
+                "#                      #",
+                "#                      #",
+                "#                      #",
+                "#                ##    #",
+                "#                #     #",
+                "#                    M #",
+                "#                      #",
+                "#                      #",
+                "#                      #",
+                "########################"
+            };
+            public static readonly Vector2 StartPos = new(3600, 3600);
+            public static readonly int KeyCount = 5;
             public static readonly int SpotCount = 9;
         }
     }
