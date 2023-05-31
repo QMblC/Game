@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -9,36 +10,62 @@ namespace MyGame.Code
 {
     public enum LevelId
     {
+        Menu = 0,
         FirstLevel = 1,
         SecondLevel,
+        ThirdLevel
     }
-    public static class Levels
+    public abstract class Level
     {
-        public static class FirstLevel
-        {
-            public static readonly List<string> Cells = new()
-            {
-                "############",
-                "#  #K  S# K#",
-                "# #### ## ##",
-                "# # K# #   #",
-                "# # ## # # #",
-                "#M         #",
-                "# #### ### #",
-                "# K#K###   #",
-                "# ## # # # #",
-                "# K#     #M#",
-                "##   ###  K#",
-                "############"
-            };
-            public static readonly Vector2 StartPos = new(1200, 1200);
-            public static readonly int KeyCount = 3;
-            public static readonly int SpotCount = 7;
-        }
+        public abstract Texture2D Texture { get; }
 
-        public static class SecondLevel
+        public abstract List<string> Cells { get; }
+
+        public abstract Vector2 StartPos { get; }
+        public abstract int KeyCount { get;}
+        public abstract int SpotCount { get;}
+    }
+
+    public class Menu : Level
+    {
+        public override Texture2D Texture => GameView.textures[12];
+        public override List<string> Cells => throw new NotImplementedException();
+
+        public override Vector2 StartPos => throw new NotImplementedException();
+
+        public override int KeyCount => throw new NotImplementedException();
+
+        public override int SpotCount => throw new NotImplementedException();
+    }
+
+    public class FirstLevel : Level
+    {
+        public override List<string> Cells => new()
         {
-            public static readonly List<string> Cells = new()
+            "############",
+            "#  #K  S# K#",
+            "# #### ## ##",
+            "# # K# #   #",
+            "# # ## # # #",
+            "#M         #",
+            "# #### ### #",
+            "# K#K###   #",
+            "# ## # # # #",
+            "# K#     #M#",
+            "##   ###  K#",
+            "############"
+        };
+
+        public override Vector2 StartPos => new(1200, 1200);
+        public override int KeyCount => 3;
+        public override int SpotCount => 7;
+
+        public override Texture2D Texture => throw new NotImplementedException();
+    }
+
+    public class SecondLevel : Level
+    {
+        public override List<string> Cells => new()
             {
                 "########################",
                 "#         #   #K  ###K #",
@@ -65,14 +92,16 @@ namespace MyGame.Code
                 "#    #M     ##K #   #K #",
                 "########################"
             };
-            public static readonly Vector2 StartPos = new(1200, 1200);
-            public static readonly int KeyCount = 5;
-            public static readonly int SpotCount = 9;
-        }
+        public override Vector2 StartPos => new(1200, 1200);
+        public override int KeyCount => 5;
+        public override int SpotCount => 9;
 
-        public static class ThirdLevel
-        {
-            public static readonly List<string> Cells = new()
+        public override Texture2D Texture => throw new NotImplementedException();
+    }
+
+    public class ThirdLevel : Level
+    {
+        public override List<string> Cells => new()
             {
                 "########################",
                 "#                      #",
@@ -99,9 +128,10 @@ namespace MyGame.Code
                 "#                      #",
                 "########################"
             };
-            public static readonly Vector2 StartPos = new(3600, 3600);
-            public static readonly int KeyCount = 5;
-            public static readonly int SpotCount = 9;
-        }
+        public override Vector2 StartPos => new(3600, 3600);
+        public override int KeyCount => 5;
+        public override int SpotCount => 9;
+
+        public override Texture2D Texture => throw new NotImplementedException();
     }
 }

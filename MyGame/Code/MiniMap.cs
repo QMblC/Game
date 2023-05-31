@@ -21,14 +21,14 @@ namespace MyGame.Code
             Position = pos;
         }
 
-        public void Draw(SpriteBatch spriteBatch, List<(Rectangle, Texture2D)> list, int scale)
+        public void Draw(SpriteBatch spriteBatch, Map map)
         {
 
-            var customScale = scale;
+            var customScale = map.Scale;
             spriteBatch.Draw(
                 BackGround, Rectangle, null, Color.BurlyWood, 0f, 
                 new Vector2(), SpriteEffects.None, 0.8f);
-            foreach (var item in list)
+            foreach (var item in map.Visited)
             {
                 var rect = new Rectangle(
                     item.Item1.X / Map.tileSize * customScale + (int)Position.X + 5,

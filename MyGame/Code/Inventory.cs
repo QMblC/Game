@@ -14,13 +14,12 @@ namespace MyGame.Code
     {
         public Texture2D Background;
         public Vector2 Position;
-        public List<Texture2D> Health;
         public List<Texture2D> Keys = new();
 
-        public Inventory(Texture2D background, int keyCount)
+        public Inventory(Texture2D background, Level level)
         {
             Background = background;
-            for (var i = 0; i < keyCount; i++)
+            for (var i = 0; i < level.KeyCount; i++)
                 Keys.Add(GameView.textures[9]);
         }
 
@@ -38,7 +37,7 @@ namespace MyGame.Code
 
         public void Update(MiniMap miniMap)
         {
-            Position = miniMap.Position + new Vector2(1280 - 190, -465);
+            Position = miniMap.Position + new Vector2(1280 - 190, -480);
         }
 
         public void Draw(SpriteBatch spriteBatch)

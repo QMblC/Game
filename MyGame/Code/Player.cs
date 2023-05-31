@@ -36,6 +36,12 @@ namespace MyGame.Code
 
         }
 
+        public Player(Texture2D texture, Inventory inventory, Vector2 position) : base(texture)
+        {
+            Inventory = inventory;
+            Position = position;
+        }
+
         public override Rectangle Rectangle
         {
             get { return new Rectangle((int)Position.X, (int)Position.Y, Texture.Width + 20, Texture.Height); }
