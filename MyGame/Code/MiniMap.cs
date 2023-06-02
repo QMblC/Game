@@ -12,8 +12,10 @@ namespace MyGame.Code
 {
     public class MiniMap
     {
+        #region Fields
         public readonly Texture2D BackGround;
         public Vector2 Position;
+        #endregion
         public Rectangle Rectangle => new Rectangle((int)Position.X, (int)Position.Y, 250, 250);
         public MiniMap(Texture2D backGround, Vector2 pos)
         {
@@ -34,6 +36,7 @@ namespace MyGame.Code
                     item.Item1.X / Map.tileSize * customScale + (int)Position.X + 5,
                     item.Item1.Y / Map.tileSize * customScale + (int)Position.Y + 5,
                     customScale, customScale);
+
                 spriteBatch.Draw(item.Item2, rect, null,
                     Color.White, 0f, Vector2.Zero, SpriteEffects.None, 1);
             }

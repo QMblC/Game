@@ -20,16 +20,16 @@ namespace MyGame.Code
         {
             Background = background;
             for (var i = 0; i < level.KeyCount; i++)
-                Keys.Add(GameView.textures[9]);
+                Keys.Add(GameCycle.textures[9]);
         }
 
         public void ChangeKeyInInventory()
         {
             for(var i = 0; i < Keys.Count; i++)
             {
-                if (Keys[i] == GameView.textures[9])
+                if (Keys[i] == GameCycle.textures[9])
                 {
-                    Keys[i] = GameView.textures[6];
+                    Keys[i] = GameCycle.textures[6];
                     break;
                 }           
             }

@@ -39,7 +39,7 @@ namespace MyGame.Code
             SpotCount = level.SpotCount;
         }
         #region Properties
-        private static List<Texture2D> Textures => GameView.textures;  
+        private static List<Texture2D> Textures => GameCycle.textures;  
         public int Scale => 24 / Cells.Count * 10;
         public bool IsEveryKeyCollected => Keys.Count == 0;
         private int Capacity
@@ -73,7 +73,7 @@ namespace MyGame.Code
                 && Math.Abs(Exit.Value.Center.Y - player.Rectangle.Center.Y) <= 100;
         }  
 
-        public void Update(SpriteBatch spriteBatch, Player player)
+        public void Draw(SpriteBatch spriteBatch, Player player)
         {
             for (var x = 0; x < Cells[0].Length; x++)
             {

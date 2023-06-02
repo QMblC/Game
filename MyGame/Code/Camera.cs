@@ -18,8 +18,8 @@ namespace MyGame.Code
               -target.Position.Y - (target.Rectangle.Height / 2),
               0);
             var offset = Matrix.CreateTranslation(
-                GameView.ScreenWidth / 2,
-                GameView.ScreenHeight / 2,
+                GameCycle.ScreenWidth / 2,
+                GameCycle.ScreenHeight / 2,
                 0);
 
             Transform = position * offset;

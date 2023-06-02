@@ -14,12 +14,16 @@ namespace MyGame.Code
         Player,
         Enemy
     }
+
     public class Sprite : IGameObject
     {
+        #region Fields
         public Texture2D Texture;
         public Vector2 Velocity;
         public Vector2 Position;
+        #endregion
 
+        #region Properties
         public virtual SpriteType Type { get; set; }
         public virtual int Speed { get; set; }
 
@@ -27,7 +31,7 @@ namespace MyGame.Code
         {
             get { return new Rectangle((int)Position.X, (int)Position.Y, 200, 200);  }
         }
-
+        #endregion
         public Sprite(Texture2D texture)
         {
             Texture = texture;
@@ -49,7 +53,7 @@ namespace MyGame.Code
         {
             
             spriteBatch.Draw(Texture, Rectangle, null, Color.White, 0f, new Vector2(),
-                                SpriteEffects.None,1);
+                                SpriteEffects.None,0.98f);
 
         }
 

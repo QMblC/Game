@@ -11,14 +11,16 @@ namespace MyGame.Code
 {
     public class Mob : Sprite
     {
-        public new int Speed = 3;
+        #region Fields
+        private readonly new int Speed = 3;
         public Vector2 Destination;
-        public override SpriteType Type { get; set; } = SpriteType.Enemy;
+        #endregion
 
-        public Mob(Texture2D texture, Vector2 position, SpriteType type) : base(texture, position, type)
-        {
+        #region Properties
+        public override SpriteType Type { get; set; }
 
-        }
+        private bool IsAchievedDestination =>
+            Math.Abs(Destination.X - Rectangle.Center.X) < 5 && Math.Abs(Destination.Y - Rectangle.Center.Y) < 5;
 
         public override Rectangle Rectangle
         {
@@ -29,6 +31,12 @@ namespace MyGame.Code
         {
             get { return new Rectangle((int)Position.X - 40, (int)Position.Y - 40, Texture.Width + 80, Texture.Height + 80); }
         }
+        #endregion
+
+        public Mob(Texture2D texture, Vector2 position, SpriteType type) : base(texture, position, type)
+        {
+
+        }
 
         public void Update(List<Sprite> sprites, Map map, Player player)
         {
@@ -38,7 +46,9 @@ namespace MyGame.Code
             {
                 if (sprite == this)
                     continue;
+
                 SetVelocity(map, player);
+
                 if (sprite.Type == SpriteType.Wall)
                 {
                     if ((Velocity.X > 0 && IsTouchingLeft(sprite)) ||
@@ -64,11 +74,10 @@ namespace MyGame.Code
                         player.IsAlive = false;
                 }
             }
-            if (Velocity.X > 0)
-                Texture = GameView.textures[11];
-            if (Velocity.X < 0)
-                Texture = GameView.textures[10];
-            Position += (Velocity + new Vector2(contrX, contrY));
+
+            CreateAnimation();
+
+            Position += Velocity + new Vector2(contrX, contrY);
             Velocity = new Vector2();
         }
 
@@ -88,17 +97,21 @@ namespace MyGame.Code
             CorrectVelocity();
         }
 
+        private void CreateAnimation()
+        {
+            if (Velocity.X > 0)
+                Texture = GameCycle.textures[11];
+            if (Velocity.X < 0)
+                Texture = GameCycle.textures[10];
+        }
+
         private void CorrectVelocity()
         {
             if (Math.Abs(Destination.X - Rectangle.Center.X) < Speed)
                 Velocity.X /= Speed;
             if (Math.Abs(Destination.Y - Rectangle.Center.Y) < Speed)
                 Velocity.Y /= Speed;
-        }
-
-        private bool IsAchievedDestination =>
-            Math.Abs(Destination.X - Rectangle.Center.X) < 5 && Math.Abs(Destination.Y - Rectangle.Center.Y) < 5;
-        
+        }  
 
         private void FollowDestination()
         {

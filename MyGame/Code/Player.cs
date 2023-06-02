@@ -20,16 +20,31 @@ namespace MyGame.Code
 
     public class Player : Sprite
     {
+
+        #region Fields
         public Inventory Inventory;
         public Vector2 StartPos;
-        public override SpriteType Type { get; set; } = SpriteType.Player;
-        public override int Speed { get; set; } = 7;
+       
         public bool IsAlive = true;
 
         private float AnimationElapsed;
         private readonly float AnimationDelay = 100f;
         private bool IsNeedToFlip = false;
         private int Frame = 0;
+
+        #endregion
+
+
+        #region Properties
+        public override SpriteType Type { get; set; } = SpriteType.Player;
+        public override int Speed { get; set; } = 7;
+
+        public override Rectangle Rectangle
+        {
+            get { return new Rectangle((int)Position.X, (int)Position.Y, Texture.Width + 20, Texture.Height); }
+        }
+
+        #endregion 
 
         public Player(Texture2D texture) : base(texture)
         {
@@ -42,20 +57,13 @@ namespace MyGame.Code
             Position = position;
         }
 
-        public override Rectangle Rectangle
-        {
-            get { return new Rectangle((int)Position.X, (int)Position.Y, Texture.Width + 20, Texture.Height); }
-        }
+        
 
         public void Update(List<Sprite> sprites, Map map, GameTime gameTime)
         {
             Move();
 
-            if (Velocity.X < 0)
-                IsNeedToFlip = true;
-            else if (Velocity.X > 0)
-                IsNeedToFlip = false;
-
+            FlipImage();
 
             if (Keyboard.GetState().GetPressedKeys().Contains(Keys.E))
                 CollectKey(map);
@@ -64,24 +72,25 @@ namespace MyGame.Code
             if (Velocity == Vector2.Zero)
                 Frame = 4;
             else
-            {
                 CreateAnimation(gameTime);
-            }
 
             CorrectDiagonalSpeed();
 
             Position += Velocity;
             Velocity = new Vector2();
+
+            Inventory.Update(map.MiniMap);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (!IsNeedToFlip)
-                spriteBatch.Draw(GameView.animation[Frame], Rectangle, null, Color.White, 0f, new Vector2(),
+                spriteBatch.Draw(GameCycle.animation[Frame], Rectangle, null, Color.White, 0f, new Vector2(),
                     SpriteEffects.None, 1);
             else
-                spriteBatch.Draw(GameView.animation[Frame], Rectangle, null, Color.White, 0f, new Vector2(),
+                spriteBatch.Draw(GameCycle.animation[Frame], Rectangle, null, Color.White, 0f, new Vector2(),
                     SpriteEffects.FlipHorizontally, 1);
+            Inventory.Draw(spriteBatch);
         }
 
         private void CreateAnimation(GameTime gameTime)
@@ -93,6 +102,14 @@ namespace MyGame.Code
                 Frame = (Frame + 1) % 9;
                 AnimationElapsed = 0;
             }
+        }
+
+        private void FlipImage()
+        {
+            if (Velocity.X < 0)
+                IsNeedToFlip = true;
+            else if (Velocity.X > 0)
+                IsNeedToFlip = false;
         }
 
         private void CheckCollision(List<Sprite> sprites)
@@ -114,7 +131,7 @@ namespace MyGame.Code
             }
         }
 
-        private void CollectKey(Map map)
+        private void CollectKey(Map map)//Нужно вынести в map замену К
         {
             Rectangle? delete = null;
             foreach(var key in map.Keys)
@@ -122,19 +139,21 @@ namespace MyGame.Code
                 if (Math.Abs(key.Center.X - Rectangle.Center.X) <= 100 
                     && Math.Abs(key.Center.Y - Rectangle.Center.Y) <= 100)
                 {
+
                     var str = new StringBuilder(map.Cells[key.Y / Map.tileSize]);
                     str[key.X / Map.tileSize] = ' ';
                     map.Cells[key.Y / Map.tileSize] = str.ToString();
                     var element = map.Visited.Select(r => r.Item1).First(r => r == key);
                     delete = key;
                     Inventory.ChangeKeyInInventory();
+
                     for (var i = 0; i < map.Visited.Count; i++)
                     {
                         if (element == map.Visited[i].Item1)
                         {
                             map.Visited.RemoveAt(i);
-                            if(!map.Visited.Contains((key, GameView.textures[1])))
-                                map.Visited.Add((key, GameView.textures[1]));
+                            if(!map.Visited.Contains((key, GameCycle.textures[1])))
+                                map.Visited.Add((key, GameCycle.textures[1]));
                             break;
                         }
                             
@@ -157,25 +176,18 @@ namespace MyGame.Code
         private void Move()
         {
             var key = Keyboard.GetState().GetPressedKeys();
+
             if (key.Contains(Keys.W))
-            {
                 Velocity.Y = -Speed;
-            }
                             
             if (key.Contains(Keys.S))
-            {
                 Velocity.Y = Speed;
-            }
                 
             if (key.Contains(Keys.D))
-            {
                 Velocity.X = Speed;
-            }
                 
             if (key.Contains(Keys.A))
-            {
                 Velocity.X = -Speed;
-            }
         }
     }
 }
