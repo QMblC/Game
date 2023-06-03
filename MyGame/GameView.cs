@@ -11,6 +11,8 @@ namespace MyGame
 {
     public class GameCycle : Game
     {
+
+        #region Fields
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
@@ -44,6 +46,7 @@ namespace MyGame
         private Button restartButton;
 
         private TextWindow textWindow;
+        #endregion
 
         public GameCycle()
         {
@@ -54,6 +57,19 @@ namespace MyGame
         }
 
         protected override void Initialize()
+        {
+           
+
+            base.Initialize();
+
+
+            _graphics.IsFullScreen = false;
+            _graphics.PreferredBackBufferWidth = ScreenWidth;
+            _graphics.PreferredBackBufferHeight = ScreenHeight;
+            _graphics.ApplyChanges();
+        }
+
+        protected override void LoadContent()
         {
             #region LoadingTextures
             textures = new List<Texture2D>
@@ -109,25 +125,17 @@ namespace MyGame
 
             #endregion
 
-            base.Initialize();
-
-
-            _graphics.IsFullScreen = false;
-            _graphics.PreferredBackBufferWidth = ScreenWidth;
-            _graphics.PreferredBackBufferHeight = ScreenHeight;
-            _graphics.ApplyChanges();
-        }
-
-        protected override void LoadContent()
-        {
+            #region LoadingMusic
             song = Content.Load<Song>("music");
             MediaPlayer.Play(song);
             MediaPlayer.IsRepeating = true;
-            MediaPlayer.Volume = 0.1f;
+            MediaPlayer.Volume = 0.05f;
+            #endregion
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             camera = new Camera();
 
+            #region Buttons
             startButton = new Button(0, -75, "Start");
             exitButton = new Button(0, +75, "Quit");
 
@@ -135,6 +143,7 @@ namespace MyGame
             backToMenuButton = new Button(0, +75, "Menu");
 
             restartButton = new Button(0, 0, "Restart");
+            #endregion
 
             textWindow = new TextWindow();
         }
@@ -144,13 +153,17 @@ namespace MyGame
 
             if (ActiveLevel == LevelId.Menu)
                 ReactMenuActions();
-            else if (ActiveLevel == LevelId.Pause)
 
+            else if (ActiveLevel == LevelId.Pause)
                 ReactPauseActions();
 
             else if (ActiveLevel == LevelId.Death)
-            {
                 ReactDeathActions();
+
+            else if (!textWindow.IsRead && ActiveLevel == LevelId.FirstLevel)
+            {
+                if (Keyboard.GetState().GetPressedKeyCount() > 0)
+                    textWindow.IsRead = true;
             }
 
             else
@@ -163,14 +176,6 @@ namespace MyGame
                     previousLevel = ActiveLevel;
                     ActiveLevel = LevelId.Pause;
                 }
-
-                if (!textWindow.IsRead && ActiveLevel == LevelId.FirstLevel)
-                {
-                    if (Keyboard.GetState().GetPressedKeyCount() > 0)
-                        textWindow.IsRead = true;
-                }
-
-
 
                 camera.Follow(player);
                 map.MiniMap.Update(player);
@@ -190,6 +195,8 @@ namespace MyGame
                 if (gameState.State == GameStates.PlayerIsAbleToFinish)
                 {
                     ActiveLevel += 1;
+                    if (ActiveLevel == LevelId.ThirdLevel)
+                        ActiveLevel = LevelId.Menu;
                     SetLevelSettings();
                 }
             }
@@ -199,12 +206,17 @@ namespace MyGame
         private void SetLevelSettings()
         {
             miniMap = new MiniMap(textures[4], new Vector2(-300, -300));
+
             map = new Map(miniMap, levels[(int) ActiveLevel]);
+
             player = new Player(animation[0],
                 new Inventory(textures[8], levels[(int)ActiveLevel]),
                 levels[(int)ActiveLevel].StartPos);
+
             gameState = new GameState(player, map);
+
             sprites = new(){ player };
+
             sprites.AddRange(map.CreateSpites(textures));
         }
 
@@ -236,15 +248,13 @@ namespace MyGame
                 ActiveLevel = LevelId.FirstLevel;
                 SetLevelSettings();
             }
-
-
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
 
-            if(ActiveLevel == LevelId.Menu)
+            if (ActiveLevel == LevelId.Menu)
             {
                 _spriteBatch.Begin(SpriteSortMode.FrontToBack);
                 _spriteBatch.Draw(textures[12], new Rectangle(0, 0, 1280, 720), Color.White);
@@ -260,23 +270,25 @@ namespace MyGame
                 continueButton.Draw(_spriteBatch);
                 backToMenuButton.Draw(_spriteBatch);
             }
-            else if(ActiveLevel == LevelId.Death)
+            else if (ActiveLevel == LevelId.Death)
             {
                 _spriteBatch.Begin(SpriteSortMode.FrontToBack);
                 _spriteBatch.Draw(textures[12], new Rectangle(0, 0, 1280, 720), Color.White);
                 restartButton.Draw(_spriteBatch);
+            }
+
+            else if (!textWindow.IsRead && ActiveLevel == LevelId.FirstLevel)
+            {
+                _spriteBatch.Begin(SpriteSortMode.FrontToBack);
+
+                textWindow.Draw(_spriteBatch);
             }
             else
             {
                 _spriteBatch.Begin(SpriteSortMode.FrontToBack, transformMatrix: camera.Transform);
 
                 if (gameState.State == GameStates.LevelsIsGenerating)
-                    return;
-
-                if(!textWindow.IsRead && ActiveLevel == LevelId.FirstLevel)
-                    textWindow.Draw(_spriteBatch);
-
-                
+                    return;            
 
                 map.MiniMap.Draw(_spriteBatch, map);
                 map.Draw(_spriteBatch, player);
@@ -287,10 +299,8 @@ namespace MyGame
 
                 player.Draw(gameTime, _spriteBatch);
                 player.Inventory.Draw(_spriteBatch);
-
-                
-
             }
+
             _spriteBatch.End();
             base.Draw(gameTime);
         }

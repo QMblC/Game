@@ -94,6 +94,7 @@ namespace MyGame.Code
 
             if (!IsAchievedDestination)
                 FollowDestination();
+
             CorrectVelocity();
         }
 

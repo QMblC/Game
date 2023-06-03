@@ -32,6 +32,7 @@ namespace MyGame.Code
             get { return new Rectangle((int)Position.X, (int)Position.Y, 200, 200);  }
         }
         #endregion
+
         public Sprite(Texture2D texture)
         {
             Texture = texture;

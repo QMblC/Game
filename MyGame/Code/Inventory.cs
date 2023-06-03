@@ -12,9 +12,9 @@ namespace MyGame.Code
 {
     public class Inventory
     {
-        public Texture2D Background;
+        public readonly Texture2D Background;
         public Vector2 Position;
-        public List<Texture2D> Keys = new();
+        public readonly List<Texture2D> Keys = new();
 
         public Inventory(Texture2D background, Level level)
         {

@@ -10,17 +10,21 @@ namespace MyGame.Code
 {
     public class TextWindow
     {
+        #region Fields
         private Texture2D texture = GameCycle.textures[4];
         private SpriteFont font = GameCycle.fonts[1];
         public bool IsRead = false;
+        public bool IsShown = false;
+
         private const string text = "WASD - Movement";
         private const string text2 = "E - Interaction";
         private const string text3 = "Press any button";
-        private const string text4 = "to close";
+        private const string text4 = "to continue";
         private const string text5 = "Coollect keys";
         private const string text6 = "and find an exit";
+        #endregion
 
-        public Rectangle Rectangle => new Rectangle(1200 - 100, 1200, 400, 200);
+        public Rectangle Rectangle => new Rectangle(1280 / 2 - 200, 720 / 2 - 100, 400, 200);
 
         public TextWindow()
         {
