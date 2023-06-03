@@ -26,11 +26,6 @@ namespace MyGame.Code
 
         public Rectangle Rectangle => new Rectangle(1280 / 2 - 200, 720 / 2 - 100, 400, 200);
 
-        public TextWindow()
-        {
-
-        }
-
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, Rectangle, null,  Color.LemonChiffon, 0f, Vector2.Zero, SpriteEffects.None, 1f);

@@ -131,7 +131,7 @@ namespace MyGame.Code
             }
         }
 
-        private void CollectKey(Map map)//Нужно вынести в map замену К
+        private void CollectKey(Map map)
         {
             Rectangle? delete = null;
             foreach(var key in map.Keys)
@@ -139,12 +139,10 @@ namespace MyGame.Code
                 if (Math.Abs(key.Center.X - Rectangle.Center.X) <= 100 
                     && Math.Abs(key.Center.Y - Rectangle.Center.Y) <= 100)
                 {
-
-                    var str = new StringBuilder(map.Cells[key.Y / Map.tileSize]);
-                    str[key.X / Map.tileSize] = ' ';
-                    map.Cells[key.Y / Map.tileSize] = str.ToString();
+                    ChangeChar(key, map);
                     var element = map.Visited.Select(r => r.Item1).First(r => r == key);
                     delete = key;
+
                     Inventory.ChangeKeyInInventory();
 
                     for (var i = 0; i < map.Visited.Count; i++)
@@ -162,6 +160,13 @@ namespace MyGame.Code
             }
             if (delete != null)
                 map.Keys.Remove(delete.Value);
+        }
+
+        private void ChangeChar(Rectangle key, Map map)
+        {
+            var str = new StringBuilder(map.Cells[key.Y / Map.tileSize]);
+            str[key.X / Map.tileSize] = ' ';
+            map.Cells[key.Y / Map.tileSize] = str.ToString();
         }
 
         private void CorrectDiagonalSpeed()

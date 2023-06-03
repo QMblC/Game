@@ -58,10 +58,7 @@ namespace MyGame
 
         protected override void Initialize()
         {
-           
-
             base.Initialize();
-
 
             _graphics.IsFullScreen = false;
             _graphics.PreferredBackBufferWidth = ScreenWidth;

@@ -30,14 +30,7 @@ namespace MyGame.Code
         private static readonly Random Rnd = new();
         public const int tileSize = 200;
         #endregion
-
-        public Map(MiniMap miniMap, Level level)
-        {
-            MiniMap = miniMap;
-            Cells = level.Cells;         
-            KeyCount = level.KeyCount;
-            SpotCount = level.SpotCount;
-        }
+       
         #region Properties
         private static List<Texture2D> Textures => GameCycle.textures;  
         public int Scale => 24 / Cells.Count * 10;
@@ -63,6 +56,15 @@ namespace MyGame.Code
             }
         }
         #endregion
+
+        public Map(MiniMap miniMap, Level level)
+        {
+            MiniMap = miniMap;
+            Cells = level.Cells;
+            KeyCount = level.KeyCount;
+            SpotCount = level.SpotCount;
+        }
+
         public bool IsAbleToLeave(Player player)
         {
             if (Exit == null)
