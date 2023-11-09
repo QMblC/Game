@@ -22,7 +22,6 @@ namespace MyGame.Code
             BackGround = backGround;
             Position = pos;
         }
-
         public void Draw(SpriteBatch spriteBatch, Map map)
         {
 

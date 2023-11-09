@@ -34,7 +34,6 @@ namespace MyGame.Code
 
         #endregion
 
-
         #region Properties
         public override SpriteType Type { get; set; } = SpriteType.Player;
         public override int Speed { get; set; } = 7;
